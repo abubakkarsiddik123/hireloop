@@ -1,7 +1,13 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
-import { Briefcase, Magnifier, LocationArrow } from "@gravity-ui/icons";
+
+import {
+  Briefcase,
+  Magnifier,
+  LocationArrow,
+} from "@gravity-ui/icons";
 
 const trendingPositions = [
   "Product Designer",
@@ -11,85 +17,178 @@ const trendingPositions = [
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden bg-[#080508] px-4 py-16 text-white sm:px-6">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.7 }}
+      className="relative overflow-hidden bg-[#080508] px-4 py-16 text-white sm:px-6"
+    >
       <div className="flex items-center justify-center">
         <div className="w-full max-w-[720px] text-center">
-          {/* Badge */}
-          <div className="inline-flex h-[34px] items-center gap-2.5 rounded-full border border-white/[.12] bg-white/[.04] px-4 text-[11px] font-medium tracking-wide text-white/55">
-            <Briefcase width={15} height={15} className="text-orange-300" />
 
-            <strong className="font-semibold text-white/90">50,000+</strong>
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="inline-flex h-[34px] items-center gap-2.5 rounded-full border border-white/[.12] bg-white/[.04] px-4 text-[11px] font-medium tracking-wide text-white/55"
+          >
+            <Briefcase
+              width={15}
+              height={15}
+              className="text-orange-300"
+            />
+
+            <strong className="font-semibold text-white/90">
+              50,000+
+            </strong>
 
             <span>NEW JOBS THIS MONTH</span>
-          </div>
+          </motion.div>
 
           {/* Heading */}
-          <h1 className="mx-auto mt-5 max-w-[680px] text-[40px] font-bold leading-[1.05] tracking-[-0.04em] text-white sm:text-[50px] md:text-[56px]">
+          <motion.h1
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.7,
+              delay: 0.15,
+              ease: "easeOut",
+            }}
+            className="mx-auto mt-5 max-w-[680px] text-[40px] font-bold leading-[1.05] tracking-[-0.04em] text-white sm:text-[50px] md:text-[56px]"
+          >
             Find Your Dream Job Today
-          </h1>
+          </motion.h1>
 
           {/* Description */}
-          <p className="mx-auto mt-4 max-w-[620px] text-[14px] leading-6 text-white/45 sm:text-[15px]">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.6,
+              delay: 0.3,
+              ease: "easeOut",
+            }}
+            className="mx-auto mt-4 max-w-[620px] text-[14px] leading-6 text-white/45 sm:text-[15px]"
+          >
             HireLoop connects top talent with world-class companies. Browse
-            thousands of <br className="hidden sm:block" />
+            thousands of{" "}
+            <br className="hidden sm:block" />
             curated opportunities and land your next role — faster.
-          </p>
+          </motion.p>
 
           {/* Search */}
-          <div className="mx-auto mt-8 w-full max-w-[540px]">
+          <motion.div
+            initial={{ opacity: 0, y: 25, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{
+              duration: 0.7,
+              delay: 0.45,
+              ease: "easeOut",
+            }}
+            className="mx-auto mt-8 w-full max-w-[540px]"
+          >
             <div className="grid h-12 grid-cols-[1fr_1px_1fr_40px] items-center rounded-[11px] border border-white/[.12] bg-white/[.035] p-1.5 pl-4 backdrop-blur-md max-[430px]:grid-cols-[1fr_40px] max-[430px]:gap-2">
+
               {/* Job Search */}
-              <div className="flex min-w-0 items-center gap-2.5 text-left text-[11px] text-white/45 sm:text-[12px]">
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
+                className="flex min-w-0 items-center gap-2.5 text-left text-[11px] text-white/45 sm:text-[12px]"
+              >
                 <Magnifier
                   width={16}
                   height={16}
                   className="shrink-0 text-white/60"
                 />
 
-                <span className="truncate">Job title, skill or company</span>
-              </div>
+                <span className="truncate">
+                  Job title, skill or company
+                </span>
+              </motion.div>
 
               {/* Divider */}
               <div className="mx-2 h-[20px] bg-white/[.10] max-[430px]:hidden" />
 
               {/* Location */}
-              <div className="flex min-w-0 items-center gap-2.5 text-left text-[11px] text-white/45 sm:text-[12px] max-[430px]:hidden">
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.65 }}
+                className="flex min-w-0 items-center gap-2.5 text-left text-[11px] text-white/45 sm:text-[12px] max-[430px]:hidden"
+              >
                 <LocationArrow
                   width={16}
                   height={16}
                   className="shrink-0 text-white/60"
                 />
 
-                <span className="truncate">Location or Remote</span>
-              </div>
+                <span className="truncate">
+                  Location or Remote
+                </span>
+              </motion.div>
 
               {/* Search Button */}
-              <Button
-                isIconOnly
-                aria-label="Search"
-                className="h-[36px] w-[36px] min-w-0 justify-self-end rounded-[8px] bg-[#7054f5] text-white"
+              <motion.div
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.7,
+                  ease: "easeOut",
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Magnifier width={17} height={17} />
-              </Button>
+                <Button
+                  isIconOnly
+                  aria-label="Search"
+                  className="h-[36px] w-[36px] min-w-0 justify-self-end rounded-[8px] bg-[#7054f5] text-white"
+                >
+                  <Magnifier width={17} height={17} />
+                </Button>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Trending */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] sm:text-[12px]">
-            <span className="mr-1 text-white/35">Trending Position</span>
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.6,
+              delay: 0.8,
+            }}
+            className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] sm:text-[12px]"
+          >
+            <span className="mr-1 text-white/35">
+              Trending Position
+            </span>
 
-            {trendingPositions.map((position) => (
-              <div
+            {trendingPositions.map((position, index) => (
+              <motion.div
                 key={position}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.35,
+                  delay: 0.9 + index * 0.1,
+                }}
+                whileHover={{
+                  y: -2,
+                  scale: 1.03,
+                }}
                 className="inline-flex h-[25px] items-center rounded-full border border-white/[.08] bg-white/[.035] px-2.5 text-[10px] text-white/50"
               >
                 {position}
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
+
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 import {
   Magnifier,
   ChartLine,
@@ -19,8 +23,7 @@ const FeaturesSection = () => {
     {
       icon: Rocket,
       title: "One-Click Apply",
-      description:
-        "Apply to multiple job applications for an easier process!",
+      description: "Apply to multiple job applications for an easier process!",
     },
     {
       icon: ChartLine,
@@ -55,11 +58,29 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="bg-[#080508] px-5 py-20">
+    <motion.section
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7 }}
+      className="bg-[#080508] px-5 py-20"
+    >
       <div className="mx-auto max-w-6xl">
         {/* Section Header */}
-        <div className="text-center">
-          <div className="mb-4 flex items-center justify-center gap-2">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-4 flex items-center justify-center gap-2"
+          >
             <span className="h-1 w-1 bg-[#8B5CF6]" />
 
             <span className="text-[10px] font-medium tracking-wide text-white/60">
@@ -67,14 +88,20 @@ const FeaturesSection = () => {
             </span>
 
             <span className="h-1 w-1 bg-[#8B5CF6]" />
-          </div>
+          </motion.div>
 
-          <h2 className="mx-auto max-w-md text-3xl font-medium leading-tight tracking-tight text-white">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mx-auto max-w-md text-3xl font-medium leading-tight tracking-tight text-white"
+          >
             Everything you need
             <br />
             to succeed
-          </h2>
-        </div>
+          </motion.h2>
+        </motion.div>
 
         {/* Features */}
         <div className="mt-12 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -82,28 +109,73 @@ const FeaturesSection = () => {
             const Icon = feature.icon;
 
             return (
-              <div key={index} className="flex gap-3">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  ease: "easeOut",
+                }}
+                whileHover={{
+                  y: -5,
+                  transition: { duration: 0.2 },
+                }}
+                className="flex gap-3"
+              >
                 {/* Icon */}
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.03]">
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.4,
+                    delay: index * 0.08 + 0.1,
+                  }}
+                  whileHover={{
+                    scale: 1.08,
+                  }}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.03]"
+                >
                   <Icon className="h-5 w-5 text-[#D8A4D8]" />
-                </div>
+                </motion.div>
 
                 {/* Content */}
                 <div>
-                  <h3 className="text-xs font-medium text-white">
+                  <motion.h3
+                    initial={{ opacity: 0, x: 10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.4,
+                      delay: index * 0.08 + 0.15,
+                    }}
+                    className="text-xs font-medium text-white"
+                  >
                     {feature.title}
-                  </h3>
+                  </motion.h3>
 
-                  <p className="mt-1.5 max-w-[155px] text-[10px] leading-4 text-white/45">
+                  <motion.p
+                    initial={{ opacity: 0, x: 10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.4,
+                      delay: index * 0.08 + 0.2,
+                    }}
+                    className="mt-1.5 max-w-[155px] text-[10px] leading-4 text-white/45"
+                  >
                     {feature.description}
-                  </p>
+                  </motion.p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

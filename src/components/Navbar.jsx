@@ -3,14 +3,19 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Link, Button } from "@heroui/react";
+import { Link, Button, Avatar } from "@heroui/react";
+import { authClient } from "@/lib/auth-client";
 
 function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Better Auth setup করার পরে এই value session থেকে আসবে।
-  const isLoggedIn = false;
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
+  const handleDelete = async () => {
+    await authClient.signOut();
+  };
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -36,11 +41,7 @@ function Navbar() {
         {/* Left Section */}
         <div className="flex w-full items-center justify-between md:w-auto">
           {/* Logo */}
-          <Link
-            href="/"
-            aria-label="Go to homepage"
-            onPress={handleNavigation}
-          >
+          <Link href="/" aria-label="Go to homepage" onPress={handleNavigation}>
             <Image
               src="/logo.png"
               alt="Job Platform"
@@ -50,7 +51,7 @@ function Navbar() {
               className="h-9 w-auto object-contain"
             />
           </Link>
-                    {/* Mobile Menu Button */}
+          {/* Mobile Menu Button */}
           <Button
             isIconOnly
             variant="light"
@@ -88,10 +89,7 @@ function Navbar() {
         {/* Desktop Navigation + Authentication */}
         <div className="hidden items-center gap-6 md:flex">
           {/* Desktop Navigation */}
-          <nav
-            className="flex items-center gap-1"
-            aria-label="Main navigation"
-          >
+          <nav className="flex items-center gap-1" aria-label="Main navigation">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -115,18 +113,28 @@ function Navbar() {
           </nav>
 
           {/* Desktop Authentication */}
-          {!isLoggedIn && (
+          {user ? (
+            <div className="flex items-center gap-2">
+              <p>HI, {user?.name}</p>
+              <Avatar>
+                <Avatar.Image alt={user?.name} src={user?.image} />
+                <Avatar.Fallback>{user?.name.charAt(0)}</Avatar.Fallback>
+              </Avatar>
+              <Link href="/auth/signIn">
+                <Button onClick={handleDelete} as={Link} variant="danger">
+                  LogOut
+                </Button>
+              </Link>
+            </div>
+          ) : (
             <div className="flex items-center gap-2 border-l border-separator pl-6">
-              <Link href="/login">Login</Link>
+              <Link href="/auth/signIn">Login</Link>
 
-              <Button
-                as={Link}
-                href="/register"
-                color="primary"
-              
-              >
-                Register
-              </Button>
+              <Link href="/auth/signup">
+                <Button as={Link} color="primary">
+                  Register
+                </Button>
+              </Link>
             </div>
           )}
         </div>
@@ -136,10 +144,7 @@ function Navbar() {
       {isMenuOpen && (
         <div className="border-t border-separator md:hidden">
           <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
-            <nav
-              className="flex flex-col gap-1"
-              aria-label="Mobile navigation"
-            >
+            <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -157,24 +162,28 @@ function Navbar() {
               ))}
 
               {/* Mobile Authentication */}
-              {!isLoggedIn && (
-                <div className="mt-3 flex flex-col gap-2 border-t border-separator pt-3">
-                  <Link
-                    href="/login"
-                    onPress={handleNavigation}
-                    className="px-3 py-3"
-                  >
-                    Login
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <p>HI, {user?.name}</p>
+                  <Avatar>
+                    <Avatar.Image alt={user?.name} src={user?.image} />
+                    <Avatar.Fallback>{user?.name.charAt(0)}</Avatar.Fallback>
+                  </Avatar>
+                  <Link href="/auth/signIn">
+                    <Button onClick={handleDelete} as={Link} variant="danger">
+                      LogOut
+                    </Button>
                   </Link>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 border-l border-separator pl-6">
+                  <Link href="/auth/signIn">Login</Link>
 
-                  <Button
-                    as={Link}
-                    href="/register"
-                    color="primary"
-                    onPress={handleNavigation}
-                  >
-                    Register
-                  </Button>
+                  <Link href="/auth/signup">
+                    <Button as={Link} color="primary">
+                      Register
+                    </Button>
+                  </Link>
                 </div>
               )}
             </nav>
