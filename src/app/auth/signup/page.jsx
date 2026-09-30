@@ -14,13 +14,13 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
+import { Radio, RadioGroup } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-
 export default function SignUpPage() {
-    const router=useRouter()
+  const router = useRouter();
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -32,6 +32,7 @@ export default function SignUpPage() {
       igame: user?.image,
       email: user?.email,
       password: user?.password,
+      role:user?.role
     });
     console.log(data, error);
     if (!data) {
@@ -39,7 +40,7 @@ export default function SignUpPage() {
       return;
     } else {
       toast.success("Account Create Successfully!");
-      router.push("/")
+      router.push("/");
     }
   };
 
@@ -141,6 +142,32 @@ export default function SignUpPage() {
 
             <FieldError />
           </TextField>
+
+          <div className="flex flex-col gap-4">
+            <Label>Subscription plan</Label>
+            <RadioGroup
+              defaultValue="seeker"
+              name="role"
+              orientation="horizontal"
+            >
+              <Radio value="seeker">
+                <Radio.Content>
+                  <Radio.Control>
+                    <Radio.Indicator />
+                  </Radio.Control>
+                  Job Seeker
+                </Radio.Content>
+              </Radio>
+              <Radio value="recruiter">
+                <Radio.Content>
+                  <Radio.Control>
+                    <Radio.Indicator />
+                  </Radio.Control>
+                  Recruiter
+                </Radio.Content>
+              </Radio>
+            </RadioGroup>
+          </div>
 
           {/* Submit + Reset */}
           <div className="mt-1 flex gap-3">
