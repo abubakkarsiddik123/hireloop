@@ -18,7 +18,6 @@ import { toast } from "react-toastify";
 import { creatJob } from "@/lib/actions/jobs";
 import { redirect } from "next/navigation";
 
-
 const categories = [
   "Engineering",
   "Design",
@@ -33,7 +32,7 @@ const jobTypes = ["Full-time", "Part-time", "Remote", "Contract", "Internship"];
 
 const currencies = ["USD", "EUR", "GBP", "BDT"];
 
-const PostJobForm = () => {
+const PostJobForm = ({ company }) => {
   const [isRemote, setIsRemote] = useState(false);
 
   const [errors, setErrors] = useState({});
@@ -53,31 +52,34 @@ const PostJobForm = () => {
     benefits: "",
   });
 
-      const handleCancel = () => {
-      setFormData({
-        jobTitle: "",
-        category: "",
-        jobType: "",
-        salaryMin: "",
-        salaryMax: "",
-        currency: "USD",
-        deadline: "",
-        responsibilities: "",
-        requirements: "",
-        benefits: "",
-      });
-    };
-
-  // Temporary company data
-  // Later this will come from backend
-  const company = {
-    id: "company-id",
-    name: "TechNova Ltd.",
-    approved: true,
-    plan: "Growth",
-    activeJobs: 7,
-    jobLimit: 10,
+  const handleCancel = () => {
+    setFormData({
+      jobTitle: "",
+      category: "",
+      jobType: "",
+      salaryMin: "",
+      salaryMax: "",
+      currency: "USD",
+      deadline: "",
+      responsibilities: "",
+      requirements: "",
+      benefits: "",
+    });
   };
+
+  if (!company) {
+    return (
+      <p className="text-center text-white/50">
+        Please add your company first to post a job.
+      </p>
+    );
+  }
+
+  const isApproved = company.status === "approved";
+  const plan = company.plan || "Free";
+  const activeJobs = company.activeJobs ?? 0;
+  const jobLimit = company.jobLimit ?? 3;
+  const canPost = isApproved && activeJobs < jobLimit;
 
   // Handle input changes
   const handleChange = (name, value) => {
@@ -85,8 +87,6 @@ const PostJobForm = () => {
       ...prev,
       [name]: value,
     }));
-
-
 
     // Remove field error when user starts fixing it
     setErrors((prev) => ({
@@ -166,9 +166,9 @@ const PostJobForm = () => {
     }
 
     // Company approval
-    if (!company.approved) {
-      newErrors.company = "Your company must be approved before posting a job.";
-    }
+    // if (!company.approved) {
+    //   newErrors.company = "Your company must be approved before posting a job.";
+    // }
 
     // Job limit
     if (company.activeJobs >= company.jobLimit) {
@@ -181,33 +181,32 @@ const PostJobForm = () => {
   };
 
   // Submit form
-  const handleSubmit =async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const isValid = validateForm();
-
-    // Validation error থাকলে stop
-    if (!isValid) {
-      return;
-    }
+    if (!validateForm()) return;
 
     const jobData = {
       ...formData,
+      salaryMin: Number(formData.salaryMin),
+      salaryMax: Number(formData.salaryMax),
       remote: isRemote,
-      companyId: company.id,
+      companyId: company._id,
+      companyName: company.companyName,
+      companyLogo: company.logo,
       status: "active",
     };
 
-    console.log("Job Data:", jobData);
-    const res=await creatJob(jobData);
-    console.log(res,"respons with post job");
-    if(res.insertedId){
-      toast.success("added job successfully!")
-      redirect("/dashboard/recruiter/jobs")
+    const res = await creatJob(jobData);
+
+    if (res.insertedId) {
+      toast.success("Job added successfully!");
+      redirect("/dashboard/recruiter/jobs");
+    } else {
+      toast.error("Failed to add job");
     }
   };
-
-  const canPost = company.approved && company.activeJobs < company.jobLimit;
+  // const canPost = company.approved && company.activeJobs < company.jobLimit;
 
   return (
     <div className="mx-auto w-full max-w-4xl">
@@ -616,26 +615,23 @@ const PostJobForm = () => {
           <div className="rounded-xl border border-white/10 p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-medium text-white">{company.name}</p>
+                <p className="font-medium text-white">{company.companyName}</p>
 
-                <p className="mt-1 text-sm text-white/40">
-                  {company.plan} Plan
-                </p>
+                <p className="mt-1 text-sm text-white/40">{plan} Plan</p>
               </div>
 
               <div className="sm:text-right">
                 <p className="text-sm text-white/40">Active Jobs</p>
 
                 <p className="mt-1 text-lg font-semibold text-white">
-                  {company.activeJobs} / {company.jobLimit}
+                  {activeJobs} / {jobLimit}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Company Approval */}
-
-          {!company.approved && (
+          {!isApproved && (
             <div className="mt-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
               <p className="text-sm text-yellow-400">
                 Your company must be approved before you can post a job.
@@ -644,20 +640,11 @@ const PostJobForm = () => {
           )}
 
           {/* Job Limit */}
-
-          {company.activeJobs >= company.jobLimit && (
+          {activeJobs >= jobLimit && (
             <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/5 p-4">
               <p className="text-sm text-red-400">
                 You have reached your active job limit.
               </p>
-            </div>
-          )}
-
-          {/* Company Error */}
-
-          {errors.company && (
-            <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/5 p-4">
-              <p className="text-sm text-red-400">{errors.company}</p>
             </div>
           )}
           <div className="flex flex-col mt-5 gap-3 sm:flex-row sm:justify-end">
